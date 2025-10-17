@@ -11,14 +11,19 @@ def hash_password(password: str):
     return hashed
 
 
-def create_user(user_name: str, user_email: str, user_password: str):
+def create_user(
+    user_name: str,
+    user_email: str,
+    user_password: str,
+    is_supervisor: bool = False,
+):
     hashed_user_password = hash_password(user_password)
     with SessionLocal() as session:
         user = Users(
             name=user_name,
             email=user_email,
             password=hashed_user_password,
-            is_supervisor=False,
+            is_supervisor=is_supervisor,
         )
         session.add(user)
         session.commit()

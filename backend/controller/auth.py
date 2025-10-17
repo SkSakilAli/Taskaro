@@ -26,14 +26,13 @@ Algorithm = os.getenv("TOKEN_ALGORITHM")
 
 
 def authenticate_user(token: Annotated[str, Depends(Oauth_scheme)]):
-    access_token = jwt.decode(token, Secret_Key)
-    user_id = access_token["user_id"]
-    expiration = access_token["exp"]
-    if expiration < datetime.now(timezone.utc).timestamp():
+    try:
+        access_token = jwt.decode(token, Secret_Key)
+        user_id = access_token["user_id"]
+    except:
         raise HTTPException(status_code=409, detail="Please Login Again")
-    else:
-        user = get_user_by_id(user_id)
-        return user
+    user = get_user_by_id(user_id)
+    return user
 
 
 def create_access_token(data_given: dict, expire_time_given: timedelta | None = None):

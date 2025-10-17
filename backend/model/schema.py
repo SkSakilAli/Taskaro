@@ -32,14 +32,16 @@ class Tasks(Base):
     assigned_by: Mapped[int] = mapped_column(
         Integer, ForeignKey("supervisors.supervisor"), nullable=True
     )
+    status: Mapped[bool] = mapped_column(Boolean, default=False, nullable=True)
 
 
 class Supervisor(Base):
     __tablename__ = "supervisors"
+    id: Mapped[int] = mapped_column(primary_key=True, nullable=False)
     supervisor: Mapped[Users] = mapped_column(
-        Integer, ForeignKey("users.id"), primary_key=True
+        Integer, ForeignKey("users.id"), unique=False
     )
-    subordinate: Mapped[list["Users"]] = mapped_column(Integer, ForeignKey("users.id"))
+    subordinate: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"))
 
 
 class RefreshToken(Base):
@@ -56,4 +58,4 @@ def create_db():
     Base.metadata.create_all(engine)
 
 
-create_db()
+# create_db()
